@@ -1,4 +1,4 @@
-# linear_algebra.py
+# numpy_arrays.py
 #
 # python refresher and introduction to doing linear algebra with numpy
 
@@ -186,7 +186,7 @@ except ValueError as e:
 # if one axis is one element, then extend it to match the other
 
 # PRACTICE:
-# what are the result of the following operation?
+# what is the result of the following operation?
 array = np.identity(3) + np.array([1,2,3]) + np.array([[-1],[-2],[-3]]) + 3
 print(array)
 
