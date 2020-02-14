@@ -4,7 +4,11 @@
 
 # begin standard imports
 import numpy as np
-import numpy.linalg as linalg
+
+hr = lambda: print('\n'+40*'-'+'\n')
+def _print(*args,**kwargs):
+  print(*args,**kwargs)
+  hr()
 
 # end standard imports
 
@@ -28,11 +32,15 @@ import numpy.linalg as linalg
 
 # The following matrix is conceptually 3 2x4 matrices...
 a = np.arange(24).reshape(3,2,4)
-print('a.shape: {}, a:'.format(a.shape),a,sep='\n')
+_print('a.shape: {}, a:'.format(a.shape),a,sep='\n')
 
 # While now it is 2 3x4 matrices...
 a = a.reshape(2,3,4)
-print('a.shape: {}, a:'.format(a.shape),a,sep='\n')
+_print('a.shape: {}, a:'.format(a.shape),a,sep='\n')
+
+## }}}
+
+## {{{
 
 # operations like reshape swapaxes, moveaxis, and transpose all
 # operate on the shape of the arrays...
@@ -42,10 +50,10 @@ b = a.reshape(2,3,4,5,6)
 c = np.moveaxis(b,0,2)
 d = np.transpose(b)
 
-print('a',a.shape)
-print('b',b.shape)
-print('c',c.shape)
-print('d',d.shape)
+_print('a',a.shape)
+_print('b',b.shape)
+_print('c',c.shape)
+_print('d',d.shape)
 
 # for linear algebra, usually transpose is enough.  Notice that what
 # transpose "actually does" is reverse the order of the shapes.  There
@@ -70,9 +78,11 @@ truth = [
   np.swapaxes(a,0,1) == np.moveaxis(a,1,0),
 ]
 
-print('all transpose ops the same?', np.all(truth))
+_print('all transpose ops the same?', np.all(truth))
 
-# PRACTICE: 
+## }}}
+
+## PRACTICE:  {{{
 # use create a matrix m of shape (m,n) such that
 #  m[i,j] == -1  |  i+j is odd
 #  m[i,j] ==  1  |  i+j is even
@@ -84,12 +94,12 @@ def makeM(m,n):
   if not n % 2: M += M // n
   return (-1)**M
 
-print('(3,4)', makeM(3,4), sep='\n')
-print('(2,3)', makeM(2,3), sep='\n')
+_print('(3,4)', makeM(3,4), sep='\n')
+_print('(2,3)', makeM(2,3), sep='\n')
 
 ## }}}
 
-## Exercise 1.1: np.stack {{{
+## Exercise 2: np.stack {{{
 # if we have some arrays, we may like to build other arrays or
 # matrices from them.  Two useful operations to accomplish this are
 # stack and concatenate.
@@ -101,17 +111,30 @@ print('(2,3)', makeM(2,3), sep='\n')
 # this can be changed with the keyword argument axis
 
 a = np.arange(4)
-print(np.stack((a,a,a)))
-print(np.stack((a,a,a), axis=1))
+_print(np.stack((a,a,a)))
+_print(np.stack((a,a,a), axis=1))
 
 a = np.arange(3*4).reshape((3,4))
 b = np.arange(3*4).reshape((3,4))
 
-print('axis=0',np.stack((a,b)),sep='\n')
-print('axis=1',np.stack((a,b),axis=1),sep='\n')
-print('axis=2',np.stack((a,b),axis=2),sep='\n')
+_print('axis=0',np.stack((a,b)),sep='\n')
+_print('axis=1',np.stack((a,b),axis=1),sep='\n')
+_print('axis=2',np.stack((a,b),axis=2),sep='\n')
 
-# PRACTICE:
+## }}}
+
+## PRACTICE: {{{
+# use create a matrix m of shape (m,n) such that
+#  m[i,j] == -1  |  i+j is odd
+#  m[i,j] ==  1  |  i+j is even
+
+# possible solution:
+
+makeM = lambda m,n: np.stack([np.arange(n)+i for i in range(m)])
+
+## }}}
+
+## PRACTICE:{{{
 # implement the stack operation for two input arrays
 
 # possible solution:
@@ -148,31 +171,33 @@ def stack(arrays,axis=0):
 a = np.arange(2*5).reshape(2,5)
 b = np.arange(2*3*4).reshape(2,3,4)
 
-print('\n-------- a,a,a,a, 1 --------\n')
-print(stack((a,a,a,a),1))
-print(np.stack((a,a,a,a),1))
-print('\n-------- b,b 1 --------\n')
-print(stack((b,b),1))
-print(np.stack((b,b),1))
-print('\n-------- b,b 2 --------\n')
-print(stack((b,b),2))
-print(np.stack((b,b),2))
+_print('\n-------- a,a,a,a, 1 --------\n')
+_print(stack((a,a,a,a),1))
+_print(np.stack((a,a,a,a),1))
+_print('\n-------- b,b 1 --------\n')
+_print(stack((b,b),1))
+_print(np.stack((b,b),1))
+_print('\n-------- b,b 2 --------\n')
+_print(stack((b,b),2))
+_print(np.stack((b,b),2))
 
 # the numpy solution is a more elegant, but more esoteric:
 # https://github.com/numpy/numpy/blob/v1.13.3/numpy/core/shape_base.py#L296-L361
 
 ## }}}
 
-## Exercise 1.3: concatenate {{{
+## Exercise 3: concatenate {{{
 
 # concatenate is almost the same as stack, but the difference is that
 # no new axis is created, rather an existing axis is extended
 
 a = np.arange(2*3).reshape((2,3))
-print(np.concatenate((a,a,a)))
-print(np.concatenate((a,a,a),axis=1))
+_print(np.concatenate((a,a,a)))
+_print(np.concatenate((a,a,a),axis=1))
 
-# PRACTICE:
+## }}}
+
+## PRACTICE:{{{
 #
 # relate concatenation and the concept of column/row space of a matrix
 #
@@ -180,22 +205,24 @@ print(np.concatenate((a,a,a),axis=1))
 # different?  How do the underlying arrays look compared to one
 # another?  Try the following:
 
-print("\n-------- STACK VS CONCAT --------\n")
+_print("\n-------- STACK VS CONCAT --------\n")
 
 a = np.arange(6).reshape((2,3))
 b = np.arange(6,12).reshape((2,3))
 
-print(np.concatenate((a,a,b)).reshape((3,2,3)))
-print(np.stack((a,a,b)))
+_print(np.concatenate((a,a,b)).reshape((3,2,3)))
+_print(np.stack((a,a,b)))
 
-print("\n-------- STACK VS CONCAT VS AXIS--------\n")
+_print("\n-------- STACK VS CONCAT VS AXIS--------\n")
 
 #
 # why don't the following two commands produce the same result?
-print(np.concatenate((a,a,b),1).reshape((3,2,3)))
-print(np.stack((a,a,b),1))
+_print(np.concatenate((a,a,b),1).reshape((3,2,3)))
+_print(np.stack((a,a,b),1))
 
-# PRACTICE: 
+## }}}
+
+## PRACTICE: {{{
 # reimplement (more simply) stack
 # hint: use concatenate and reshape
 
@@ -210,12 +237,12 @@ def stack(arrays,axis=0):
   new_shape = shape[:axis] + (len(arrays),) + shape[axis:]
   return np.concatenate(arrays,axis=axis).reshape(new_shape)
 
-print("\nSOLUTIONS\n")
+a = np.arange(6).reshape((2,3))
+b = np.arange(6,12).reshape((2,3))
 
-print(stack((a,a,b)))
-print(np.stack((a,a,b)))
-
-print(stack((a,a,b),1))
-print(np.stack((a,a,b),1))
+_print(stack((a,a,b)))
+_print(np.stack((a,a,b)))
+_print(stack((a,a,b),1))
+_print(np.stack((a,a,b),1))
 
 ## }}}
