@@ -268,7 +268,54 @@ for i in range(2,10):
 
 ## }}}
 
-## Exercise {{{ Solve Ax = b using LDU decomposition
+## Exercise: permutations O(n): {{{
+
+# using "advanced indexing" permutations can be quite straightforward
+
+# permutation:
+# 0 1 2 3 4 ->
+# 1 0 4 2 3
+
+i = np.arange(5)
+p = np.array([1,0,4,2,3])
+print(i[p])
+print(i[p][p])
+print(i[p][p][p])
+
+def transpose(p,i,j): p[[i,j]] = p[[j,i]]
+def compose(p,q): return p[q]
+def invert(p):
+  q = np.empty_like(p)
+  q[p] = np.arange(q.shape[0])
+  return q
+
+q = invert(p)
+print(p,q,p[q],q[p])
+
+# PRACTICE:
+# given a permutation and an array of indices, rotate all the indices
+# given in the permutation
+#
+# example:
+# [0,1,2,3,4], [0,2,4] -> [4,1,0,3,2]
+#     ~~ (0,2,4)*id
+# [2,1,4,3,0], [0,2,3] -> [3,1,2,4,0]
+#     ~~ (0,2,3)*(0,2,4)
+
+# possible solution:
+def rotate(a,r): 
+  a[r] = a[[r[-1],*r[:-1]]]
+
+p = np.arange(5)
+print(p)
+rotate(p,[0,2,4])
+print(p)
+rotate(p,[0,2,3])
+print(p)
+
+## }}}
+
+## Exercise {{{ Solve Ax = b using LU decomposition
 
 def get_pivot(U,i,p):
   j = np.argmin(np.abs(np.log(U[i:,i])))

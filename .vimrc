@@ -4,6 +4,7 @@ set nu hls et ts=2 sts=2 sw=2 fo=croqtjn tw=70
 set autowrite
 nnoremap \vv :so .vimrc<cr>
 nnoremap \t :w<cr>:call RunScript()<cr>
+vert bel terminal
 
 function! GetStandardImports()
   let begin = search('begin standard imports','n')
