@@ -135,7 +135,7 @@ def gs_eliminate(Q,v):
 
 def QR(A):
     q_len,n = 0,A.shape[1]
-    if n != A.shape[0] or len(A.shape) != 2: 
+    if n != A.shape[0] or A.ndim != 2: 
         raise ValueError('QR: A not square')
     Q,R,I = [],np.zeros((n,n)),np.identity(n)
     for a_col in range(n):
@@ -150,7 +150,7 @@ def QR(A):
     return np.stack(Q).T,R
 
 def QR_verify(A):
-    if not len(A.shape) == 2 and A.shape[0] == A.shape[1]:
+    if not A.ndim == 2 and A.shape[0] == A.shape[1]:
         raise ValueError('QR requires a square matrix')
     Q,R = QR(A)
     I = np.identity(A.shape[0])
@@ -219,7 +219,7 @@ def gs_eliminate(Q,v):
 
 def QR(A):
     q_len,n = 0,A.shape[1]
-    if n != A.shape[0] or len(A.shape) != 2: 
+    if n != A.shape[0] or A.ndim != 2: 
         raise ValueError('QR: A not square')
     Q,R,I = [],np.zeros((n,n)),np.identity(n)
     for a_col in range(n):
@@ -252,7 +252,7 @@ print(np.around(A@QR_Solve(A,[0,1,1]),5))
 # implement inversion using QR
 
 def inv(A):
-    if len(A.shape) != 2 or A.shape[0] != A.shape[1]:
+    if A.ndim != 2 or A.shape[0] != A.shape[1]:
         raise ValueError('inv takes only square matrix')
     n = A.shape[0]
     return np.stack([QR_Solve(A,e) for e in np.identity(n)],1)
@@ -268,6 +268,24 @@ for i in range(2,10):
 
 ## }}}
 
-## Exercise {{{ get eigenvalues / eigenvectors using QR
+## Exercise {{{ Solve Ax = b using LDU decomposition
+
+def get_pivot(U,i,p):
+  j = np.argmin(np.abs(np.log(U[i:,i])))
+  print('get_pivot',i,j,p,U,sep='\n')
+  if U[i,j] == 0: return False
+  p[[i,j]] = p[[j,i]]
+  U[[i,j]] = U[[j,i]]
+  return True
+
+def LU(A):
+  n = A.shape[0]
+  p,L,U = np.arange(n),np.zeros(A.shape),np.copy(A)
+  for i in range(n-1):
+    if not get_pivot(U,i,p): continue
+    print('i',i)
+    L[i:,i] = U[i:,i]/U[i,i]
+    U[i+1:] -= U[i]*L[i+1:,i].reshape(n-i-1,1)
+  return p,L,U
 
 ## }}}
